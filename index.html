@@ -140,6 +140,18 @@ footer{background:var(--ink);color:#8A8D99;font-size:12px;padding:28px 0 100px}
 footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
 footer a{color:inherit}
 
+
+/* gameplay video */
+.watch{display:inline-flex;align-items:center;gap:8px;justify-self:center;margin-top:14px;color:#fff;font:700 14px Pretendard;text-decoration:none;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:9px 16px;border-radius:99px}
+.watch b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--cone);font-size:10px;padding-left:2px}
+.player{display:grid;justify-items:center;gap:14px;margin-top:26px;scroll-margin-top:20px}
+.vphone{position:relative;width:min(300px,78vw)}
+.vphone video{display:block;width:100%;aspect-ratio:9/16;border-radius:22px;background:#000;object-fit:cover}
+.vplay{position:absolute;inset:7px;border:0;border-radius:22px;background:rgba(20,26,51,.25);display:grid;place-items:center;cursor:pointer}
+.vplay span{width:72px;height:72px;border-radius:50%;background:var(--cone);color:#fff;font-size:26px;display:grid;place-items:center;padding-left:5px;box-shadow:0 6px 0 var(--cone-dark),0 12px 30px rgba(0,0,0,.35)}
+.vplay[hidden]{display:none}
+.vnote{font-size:13px;color:var(--muted);font-weight:600}
+
 /* commute route: 회사 → 지하철 → 먹자골목 → 집 */
 .route{position:relative;display:grid;gap:18px;margin-top:30px}
 .route::before{content:"";position:absolute;left:27px;top:20px;bottom:40px;border-left:3px dashed #D9CFBC}
@@ -226,12 +238,13 @@ footer a{color:inherit}
 /* desktop */
 @media (min-width:900px){
   .hero{padding:90px 0 70px}
-  .hero .wrap{grid-template-columns:1.05fr .95fr;grid-template-areas:"clock stage" "h1 stage" "sub stage" "card stage" "stores stage";column-gap:40px;align-items:start}
+  .hero .wrap{grid-template-columns:1.05fr .95fr;grid-template-areas:"clock stage" "h1 stage" "sub stage" "card stage" "watch stage" "stores stage";column-gap:40px;align-items:start}
   .clock{grid-area:clock;justify-self:start}
   .hero h1{grid-area:h1;text-align:left}
   .hero .sub{grid-area:sub;text-align:left;margin:6px 0 18px}
   .card{grid-area:card;margin:0}
   .stores{grid-area:stores;justify-content:flex-start}
+  .watch{grid-area:watch;justify-self:start;margin:14px 0 0}
   .stage{grid-area:stage;height:520px;max-width:none;align-self:center}
   .stage .hero-img{height:480px}
   .stage .crew{height:170px}.stage .c2,.stage .c3{height:140px}
@@ -319,6 +332,7 @@ footer a{color:inherit}
         <button class="btn share" type="button" id="share"><span data-ko>동기한테도 알려주기</span><span data-en>Tell a coworker</span></button>
       </div>
     </div>
+    <a class="watch" href="#play"><b>▶</b><span data-ko>플레이 영상 보기</span><span data-en>Watch gameplay</span></a>
     <div class="stores"><span>Google Play · <span data-ko>출시 예정</span><span data-en>Coming soon</span></span><span>App Store · <span data-ko>출시 예정</span><span data-en>Coming soon</span></span></div>
   </div>
 </section>
@@ -329,6 +343,18 @@ footer a{color:inherit}
     <span class="eyebrow"><span data-ko>광고 = 실제 게임</span><span data-en>WHAT YOU SAW IS WHAT YOU PLAY</span></span>
     <h2 class="display"><span data-ko>광고에서 본 그 화면,<br>진짜 게임 화면이에요</span><span data-en>The ad is<br>the actual game</span></h2>
     <p class="lead"><span data-ko>아래 장면은 전부 개발 중인 게임을 그대로 녹화한 거예요. 광고와 다른 미니게임은 없어요.</span><span data-en>Every shot below is recorded straight from the game in development. No bait-and-switch minigames.</span></p>
+    <div class="player" id="play">
+      <div class="tabs vtabs" role="tablist">
+        <button type="button" role="tab" data-v="office" aria-selected="true"><span data-ko>🏢 회사</span><span data-en>🏢 Office</span></button>
+        <button type="button" role="tab" data-v="subway" aria-selected="false"><span data-ko>🚇 지하철</span><span data-en>🚇 Subway</span></button>
+        <button type="button" role="tab" data-v="alley" aria-selected="false"><span data-ko>🍗 먹자골목</span><span data-en>🍗 Food street</span></button>
+      </div>
+      <div class="phone vphone">
+        <video id="vid" controls playsinline preload="none" poster="img/poster_office.jpg" src="video/play_office.mp4"></video>
+        <button type="button" class="vplay" id="vplay" aria-label="재생"><span>▶</span></button>
+      </div>
+      <p class="vnote"><span data-ko>🔊 소리를 켜면 사자후가 들려요</span><span data-en>🔊 Turn the sound on to hear the roar</span></p>
+    </div>
     <div class="shots">
       <figure class="shot"><div class="phone"><img src="img/shot_box.webp" alt="상자를 쏴서 동료를 모으는 장면" loading="lazy"></div><figcaption><span data-ko>상자 쏴서 동료 모으기</span><span data-en>Shoot boxes, gather coworkers</span></figcaption></figure>
       <figure class="shot"><div class="phone"><img src="img/shot_weapon.webp" alt="무기가 전동 스테이플러로 진화하는 장면" loading="lazy"></div><figcaption><span data-ko>스테이플러가 전동으로 진화</span><span data-en>Your stapler evolves</span></figcaption></figure>
@@ -573,9 +599,20 @@ document.getElementById('share').onclick=()=>{
   navigator.share?navigator.share(d).catch(()=>{}):navigator.clipboard?.writeText(d.url);
 };
 
+// 플레이 영상: 스테이지 탭으로 영상 교체, 큰 재생 버튼
+const vid=document.getElementById('vid'),vplay=document.getElementById('vplay');
+vplay.onclick=()=>{vplay.hidden=true;vid.play()};
+vid.addEventListener('play',()=>vplay.hidden=true);
+document.querySelectorAll('.vtabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.vtabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  const k=b.dataset.v,playing=!vid.paused;
+  vid.poster=`img/poster_${k}.jpg`;vid.src=`video/play_${k}.mp4`;
+  if(playing)vid.play();else vplay.hidden=false;
+});
+
 // 빌런 도감 탭
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+document.querySelectorAll('.dexsec .tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.dexsec .tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
   document.querySelectorAll('.dex article').forEach(a=>a.hidden=a.dataset.stage!==b.dataset.tab);
 });
 
