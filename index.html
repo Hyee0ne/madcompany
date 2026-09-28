@@ -33,7 +33,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:Pretendard,-apple-system,system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;overflow-x:hidden}
+body{font-family:Pretendard,-apple-system,system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
 img{display:block;max-width:100%}
 .wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 20px}
 .display{font-family:"Black Han Sans",Pretendard,sans-serif;font-weight:400;letter-spacing:-.01em;line-height:1.12}
@@ -52,7 +52,8 @@ html[lang=en] .display{font-family:Bungee,"Black Han Sans",sans-serif;letter-spa
 /* ---------- hero ---------- */
 .hero{position:relative;background:radial-gradient(120% 70% at 50% 38%,#2B3A78 0%,var(--night) 62%);color:#fff;padding:64px 0 40px;overflow:hidden}
 .hero::before{content:"";position:absolute;inset:0;background:url(img/shot_box.webp) center 30%/cover;opacity:.07;filter:blur(2px)}
-.hero .wrap{position:relative;display:grid;gap:8px}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.hero .wrap>*{min-width:0}
 .clock{justify-self:center;display:inline-flex;align-items:center;gap:10px;background:#0B0F22;border:2px solid #2A3563;border-radius:12px;padding:6px 14px 6px 10px;box-shadow:0 0 0 4px rgba(255,255,255,.03)}
 .clock .dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);animation:blink 1s steps(2) infinite}
 .clock b{font:400 30px/1 Bungee,monospace;color:#FF4E3A;text-shadow:0 0 12px rgba(255,78,58,.6);min-width:128px;text-align:center;font-variant-numeric:tabular-nums}
