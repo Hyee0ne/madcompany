@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>매드컴퍼니 — 오늘은 칼퇴한다</title>
+<meta name="description" content="라바콘 쓰고, 스테이플러 쏘고, 부장님을 뚫고 칼퇴하는 한 손 러너 게임. 출시 알림을 받아보세요.">
+<meta property="og:title" content="매드컴퍼니 — 오늘도 칼퇴?">
+<meta property="og:description" content="부장님을 뚫고 퇴근하는 한 손 러너 게임. 출시 알림을 받아보세요.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hyee0ne.github.io/madcompany/">
+<meta property="og:image" content="https://hyee0ne.github.io/madcompany/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bungee&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --night:#141A33;      /* 퇴근길 밤하늘 (광고 엔드카드와 같은 톤) */
+  --night-2:#1E2748;
+  --cone:#FF6A1A;       /* 라바콘 · 넥타이 */
+  --cone-dark:#D94E08;
+  --postit:#FFD23F;     /* 강조색 포스트잇 노랑 */
+  --paper:#F7F3EA;      /* 사무실 파스텔 */
+  --ink:#16161A;        /* 정장 검정 */
+  --muted:#6B6F80;
+  --box:#C98B3D;
+  --blue:#2F6BFF; --red:#E8412C; --green:#2DB35A;
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Pretendard,-apple-system,system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;overflow-x:hidden}
+img{display:block;max-width:100%}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 20px}
+.display{font-family:"Black Han Sans",Pretendard,sans-serif;font-weight:400;letter-spacing:-.01em;line-height:1.12}
+html[lang=en] .display{font-family:Bungee,"Black Han Sans",sans-serif;letter-spacing:0}
+[data-en]{display:none!important} html[lang=en] [data-en]{display:revert!important} html[lang=en] [data-ko]{display:none!important}
+
+/* ---------- top bar ---------- */
+.top{position:absolute;inset:0 0 auto;z-index:5;padding:14px 0}
+.top .wrap{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px;color:#fff;font-family:Bungee,sans-serif;font-size:15px;letter-spacing:.02em}
+.logo i{width:22px;height:22px;background:var(--cone);clip-path:polygon(50% 0,72% 78%,100% 78%,100% 100%,0 100%,0 78%,28% 78%);display:block}
+.lang{display:flex;background:rgba(255,255,255,.1);border-radius:99px;padding:3px}
+.lang button{border:0;background:none;color:#fff;opacity:.6;font:700 12px Pretendard;padding:6px 11px;border-radius:99px;cursor:pointer}
+.lang button[aria-pressed=true]{background:#fff;color:var(--night);opacity:1}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:radial-gradient(120% 70% at 50% 38%,#2B3A78 0%,var(--night) 62%);color:#fff;padding:64px 0 40px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:url(img/shot_box.webp) center 30%/cover;opacity:.07;filter:blur(2px)}
+.hero .wrap{position:relative;display:grid;gap:8px}
+.clock{justify-self:center;display:inline-flex;align-items:center;gap:10px;background:#0B0F22;border:2px solid #2A3563;border-radius:12px;padding:6px 14px 6px 10px;box-shadow:0 0 0 4px rgba(255,255,255,.03)}
+.clock .dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);animation:blink 1s steps(2) infinite}
+.clock b{font:400 30px/1 Bungee,monospace;color:#FF4E3A;text-shadow:0 0 12px rgba(255,78,58,.6);min-width:128px;text-align:center;font-variant-numeric:tabular-nums}
+.clock.off b{color:#5CFF8A;text-shadow:0 0 14px rgba(92,255,138,.6)}
+.clock.off .dot{background:#5CFF8A;box-shadow:0 0 10px #5CFF8A;animation:none}
+.clock small{font-size:11px;opacity:.6;font-weight:600}
+@keyframes blink{50%{opacity:.2}}
+
+.hero h1{text-align:center;font-size:clamp(40px,11.5vw,76px);margin-top:14px}
+.hero h1 em{font-style:normal;color:var(--cone)}
+.hero .sub{text-align:center;font-size:16px;opacity:.82;max-width:30em;margin:6px auto 0}
+
+.stage{position:relative;height:270px;margin:6px auto -8px;width:100%;max-width:420px}
+.stage .hero-img{position:absolute;left:50%;bottom:0;height:262px;transform:translateX(-50%);filter:drop-shadow(0 18px 30px rgba(0,0,0,.45));animation:bob 2.4s ease-in-out infinite}
+.stage .crew{position:absolute;bottom:0;height:120px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4))}
+.stage .c1{left:2%;height:108px;transform:rotate(-4deg)}
+.stage .c2{left:16%;bottom:10px;height:92px;opacity:.9}
+.stage .c3{right:15%;bottom:10px;height:92px;opacity:.9}
+.stage .c4{right:2%;height:108px;transform:rotate(4deg)}
+.stamp{position:absolute;right:4%;top:6%;font:400 26px "Black Han Sans";color:var(--red);border:4px solid var(--red);border-radius:10px;padding:2px 12px;transform:rotate(-12deg) scale(2.4);opacity:0;background:rgba(20,26,51,.4)}
+.stamp.on{animation:stamp .38s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes stamp{to{transform:rotate(-12deg) scale(1);opacity:1}}
+@keyframes bob{50%{transform:translateX(-50%) translateY(-6px)}}
+
+/* ---------- signup card ---------- */
+.card{background:#fff;color:var(--ink);border-radius:22px;padding:20px 18px 18px;box-shadow:0 20px 50px rgba(0,0,0,.35);max-width:440px;width:100%;margin:0 auto;position:relative;z-index:2}
+.card h2{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.card p.hint{font-size:13px;color:var(--muted);margin-top:2px}
+.field{display:flex;gap:8px;margin-top:14px}
+.field input{flex:1;min-width:0;height:54px;border:2px solid #E3E1DA;border-radius:14px;padding:0 14px;font:500 16px Pretendard;background:#FBFAF7;outline:none;transition:border-color .15s}
+.field input:focus{border-color:var(--cone);background:#fff}
+.field input[aria-invalid=true]{border-color:var(--red)}
+.btn{height:54px;border:0;border-radius:14px;background:var(--cone);color:#fff;font:800 16px Pretendard;padding:0 18px;cursor:pointer;box-shadow:0 4px 0 var(--cone-dark);transition:transform .08s,box-shadow .08s;white-space:nowrap;text-decoration:none}
+.btn:disabled{opacity:.6;cursor:default}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--cone-dark)}
+.consent{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:12.5px;color:var(--muted);cursor:pointer}
+.consent input{width:18px;height:18px;margin-top:1px;accent-color:var(--cone);flex:none}
+.consent a{color:inherit}
+.err{color:var(--red);font-size:12.5px;font-weight:600;margin-top:8px;min-height:1em}
+.done{display:none;text-align:center;padding:6px 0 2px}
+.card.ok form{display:none}.card.ok .done{display:block}
+.done .big{font:400 30px "Black Han Sans";color:var(--red);border:4px solid var(--red);display:inline-block;padding:2px 14px;border-radius:10px;transform:rotate(-6deg);margin:4px 0 12px}
+.done p{font-size:15px}
+.done .share{margin-top:14px;background:var(--ink);box-shadow:0 4px 0 #000}
+.stores{display:flex;justify-content:center;gap:8px;margin-top:16px;font-size:12px;opacity:.7}
+.stores>span{border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 10px}
+
+/* ---------- sections ---------- */
+section.s{padding:64px 0}
+.eyebrow{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--cone-dark);background:#FFE6D6;padding:5px 10px;border-radius:99px}
+.s h2.display{font-size:clamp(30px,8vw,48px);margin:12px 0 8px}
+.s .lead{color:var(--muted);font-size:16px;max-width:34em}
+
+/* real gameplay strip */
+.shots{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 20px 10px;margin:0 -20px;scrollbar-width:none}
+.shots::-webkit-scrollbar{display:none}
+.shot{flex:none;width:62%;max-width:230px;scroll-snap-align:center}
+.phone{border-radius:28px;padding:7px;background:var(--ink);box-shadow:0 14px 30px rgba(22,22,26,.22)}
+.phone img{border-radius:22px;aspect-ratio:9/16;object-fit:cover;width:100%}
+.shot figcaption{font-size:14px;font-weight:700;margin-top:10px;text-align:center}
+.truth{display:flex;align-items:center;gap:10px;margin-top:18px;background:#fff;border:2px dashed #E3D9C4;border-radius:14px;padding:12px 14px;font-size:14px}
+.truth b{color:var(--cone-dark)}
+
+/* how to play */
+.how{background:var(--night);color:#fff}
+.how .lead{color:#AEB4CC}
+.how .eyebrow{background:rgba(255,106,26,.16);color:#FF9A61}
+.steps{display:grid;gap:14px;margin-top:28px}
+.step{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;background:var(--night-2);border-radius:var(--r);padding:14px;overflow:hidden}
+.step .art{height:96px;display:grid;place-items:center;position:relative}
+.step .art img{max-height:96px;width:auto}
+.step .n{font:400 13px Bungee;color:var(--postit)}
+.step h3{font-size:18px;font-weight:800;margin:2px 0}
+.step p{font-size:14px;color:#AEB4CC}
+.boxlabel{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);background:var(--blue);color:#fff;font:800 13px/1.1 Pretendard;padding:4px 7px;border-radius:5px;text-align:center;white-space:nowrap;text-decoration:none}
+.boxlabel small{display:block;font-size:10px;opacity:.85}
+.bubble{position:absolute;top:-2px;right:-6px;background:#fff;color:var(--ink);font:800 11px Pretendard;padding:3px 7px;border-radius:9px;transform:rotate(6deg)}
+
+/* final */
+.final{text-align:center;padding:64px 0 120px}
+.final .display{font-size:clamp(34px,9vw,56px)}
+.final img.lineup{width:100%;max-width:640px;height:auto;margin:0 auto 10px;border-radius:24px;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 60%,transparent 100%)}
+.final .btn{padding:0 30px;margin-top:10px}
+footer{background:var(--ink);color:#8A8D99;font-size:12px;padding:28px 0 100px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+footer a{color:inherit}
+
+/* commute route: 회사 → 지하철 → 먹자골목 → 집 */
+.route{position:relative;display:grid;gap:18px;margin-top:30px}
+.route::before{content:"";position:absolute;left:27px;top:20px;bottom:40px;border-left:3px dashed #D9CFBC}
+.leg{position:relative;display:grid;grid-template-columns:56px 1fr;gap:12px}
+.pin{width:56px;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:6px;position:relative;z-index:1}
+.pin b{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:400 14px Bungee}
+.pin time{font:700 11px Pretendard;color:var(--muted);background:var(--paper);padding:0 2px}
+.leg.home .pin b{background:var(--green)}
+.scene{position:relative;border-radius:var(--r);overflow:hidden;background:#fff;box-shadow:0 2px 0 #E8E3D6;display:grid;grid-template-columns:118px 1fr}
+.scene .bg{position:relative;height:190px;overflow:hidden}
+.scene .bg>img:first-child{width:100%;height:100%;object-fit:cover;object-position:center 45%}
+.scene .txt{padding:14px 14px 14px 16px;align-self:center}
+.scene .where{font-size:12px;font-weight:700;color:var(--muted)}
+.scene h3{font-size:17px;letter-spacing:-.02em;font-weight:800;margin:2px 0 4px}
+.scene .vs{font-size:13px;color:var(--muted);margin-bottom:8px}
+.scene .vs b{color:var(--ink)}
+.scene q{display:inline-block;background:var(--paper);border-radius:12px 12px 12px 3px;padding:7px 11px;font-size:13.5px;font-weight:600;quotes:none}
+.leg.home .scene{background:#1D2340;color:#fff;box-shadow:0 10px 30px rgba(29,35,64,.3)}
+.leg.home .scene .where,.leg.home .scene .vs{color:#AEB4CC}
+.leg.home .scene h3{color:var(--postit)}
+.leg.home .scene q{background:rgba(255,255,255,.1)}
+
+
+/* villain field guide */
+.tabs{display:flex;gap:6px;margin-top:24px;background:#ECE8DE;padding:4px;border-radius:14px;width:fit-content;max-width:100%}
+.tabs button{border:0;background:none;font:800 14px Pretendard;color:var(--muted);padding:9px 14px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.dex{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.dex article{position:relative;background:#fff;border-radius:var(--r);padding:12px 12px 14px;box-shadow:0 2px 0 #E8E3D6;animation:pop .25s ease both}
+.dex article[hidden]{display:none!important}
+.dex .mob{height:120px;display:grid;place-items:end center;background:linear-gradient(#F4F1EA,#E9E4D8);border-radius:12px;margin-bottom:10px;padding-top:8px}
+.dex .mob img{max-height:110px;max-width:92%;width:auto}
+.dex .tag{position:absolute;top:18px;left:18px;font-size:10.5px;font-weight:800;padding:3px 7px;border-radius:99px;color:#fff}
+.t-base{background:#5B6178}.t-fast{background:var(--blue)}.t-tank{background:var(--red)}
+.dex h3{font-size:15.5px;font-weight:800;letter-spacing:-.02em}
+.dex q{display:block;font-size:12.5px;font-weight:700;color:var(--cone-dark);margin:2px 0 4px;quotes:none}
+.dex p{font-size:12.5px;color:var(--muted);line-height:1.45}
+.dex article.boss{grid-column:1/-1;display:grid;grid-template-columns:128px 1fr;gap:14px;align-items:center;background:var(--night);color:#fff;box-shadow:0 10px 24px rgba(20,26,51,.25)}
+.dex article.boss .mob{height:150px;margin:0;background:radial-gradient(circle at 50% 80%,#34407A,#1E2748)}
+.dex article.boss .mob img{max-height:140px}
+.dex article.boss .tag{position:static;display:inline-block;margin-bottom:4px}
+.dex article.boss h3{font-size:19px}
+.dex article.boss q{color:#FF9A61;font-size:13.5px}
+.dex article.boss p{color:#AEB4CC;font-size:13px}
+.dex article.boss .tip{color:var(--postit);font-weight:700;margin-top:6px}
+.t-boss{background:var(--postit);color:var(--ink)!important}
+.scene .bossline{display:inline-block;font-size:11.5px;font-weight:800;color:var(--cone-dark);background:#FFE6D6;padding:4px 9px;border-radius:99px}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}}
+
+/* weapons */
+.weapons{display:grid;gap:12px;margin-top:28px}
+.wpn{background:var(--night-2);border-radius:var(--r);padding:14px 14px 12px}
+.wpn header{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.wpn h3{font-size:17px;font-weight:800}
+.wpn .role{font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px;background:rgba(255,210,63,.14);color:var(--postit);white-space:nowrap}
+.wpn p{font-size:13px;color:#AEB4CC;margin-top:2px}
+.tiers{display:grid;grid-template-columns:1fr 14px 1fr 14px 1fr;align-items:end;margin-top:10px}
+.tiers .arrow{color:#4B557F;font-weight:900;text-align:center;align-self:center}
+.tier{text-align:center}
+.tier .img{height:76px;display:grid;place-items:end center}
+.tier img{max-height:76px;max-width:100%;width:auto}
+.tier span{display:block;font-size:11px;font-weight:700;color:#AEB4CC;margin-top:4px}
+.tier:last-child span{color:var(--postit)}
+
+/* dress-up */
+.dress{display:grid;gap:16px;margin-top:28px}
+.fitting{position:relative;background:radial-gradient(circle at 50% 70%,#FFE6D6,#FFF7EF 60%);border-radius:22px;height:340px;display:grid;place-items:end center;overflow:hidden}
+.fitting img{height:310px;width:auto;margin-bottom:10px;transition:transform .2s}
+.fitting img.swap{transform:scale(.92) translateY(6px)}
+.fitting .name{position:absolute;left:14px;top:14px;background:var(--ink);color:#fff;font:800 14px Pretendard;padding:6px 12px;border-radius:99px}
+.fitting .floor{position:absolute;bottom:14px;left:50%;width:160px;height:18px;transform:translateX(-50%);background:rgba(0,0,0,.08);border-radius:50%}
+.looks{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.looks::-webkit-scrollbar{display:none}
+.looks button{flex:none;width:64px;height:76px;border-radius:14px;border:2px solid #E3E1DA;background:#fff;cursor:pointer;display:grid;place-items:end center;padding:4px 0 0;overflow:hidden}
+.looks button img{height:68px;width:auto}
+.looks button[aria-pressed=true]{border-color:var(--cone);box-shadow:0 0 0 3px #FFE6D6}
+.soon{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;color:var(--muted);background:#ECE8DE;padding:3px 8px;border-radius:99px;vertical-align:middle}
+
+/* sticky CTA (mobile) */
+.sticky{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:20;transform:translateY(140%);transition:transform .25s ease}
+.sticky.show{transform:none}
+.sticky .btn{width:100%;height:56px;font-size:17px;box-shadow:0 4px 0 var(--cone-dark),0 10px 30px rgba(0,0,0,.25)}
+
+/* desktop */
+@media (min-width:900px){
+  .hero{padding:90px 0 70px}
+  .hero .wrap{grid-template-columns:1.05fr .95fr;grid-template-areas:"clock stage" "h1 stage" "sub stage" "card stage" "stores stage";column-gap:40px;align-items:start}
+  .clock{grid-area:clock;justify-self:start}
+  .hero h1{grid-area:h1;text-align:left}
+  .hero .sub{grid-area:sub;text-align:left;margin:6px 0 18px}
+  .card{grid-area:card;margin:0}
+  .stores{grid-area:stores;justify-content:flex-start}
+  .stage{grid-area:stage;height:520px;max-width:none;align-self:center}
+  .stage .hero-img{height:480px}
+  .stage .crew{height:170px}.stage .c2,.stage .c3{height:140px}
+  .shots{overflow:visible;justify-content:space-between;margin:0;padding:26px 0 10px}
+  .shot{width:23%;max-width:none}
+  .steps{grid-template-columns:repeat(3,1fr)}
+  .step{grid-template-columns:1fr;text-align:center}
+  .step .art{height:130px}.step .art img{max-height:130px}
+  .route{grid-template-columns:repeat(4,1fr);gap:14px}
+  .route::before{left:6%;right:6%;top:17px;bottom:auto;border-left:0;border-top:3px dashed #D9CFBC}
+  .leg{grid-template-columns:1fr;gap:10px}
+  .pin{width:auto;flex-direction:row;padding:0}
+  .scene{grid-template-columns:1fr}
+  .scene .bg{height:300px}
+    .weapons{grid-template-columns:repeat(5,1fr)}
+  .dex{grid-template-columns:repeat(4,1fr)}
+  .dex .mob{height:170px}.dex .mob img{max-height:156px}
+  .dex article.boss{grid-template-columns:220px 1fr;padding:16px 24px 16px 16px}
+  .dex article.boss .mob{height:210px}.dex article.boss .mob img{max-height:196px}
+  .dex article.boss h3{font-size:24px}
+  .tiers{grid-template-columns:1fr;gap:6px}.tiers .arrow{display:none}
+  .dress{grid-template-columns:1fr;max-width:640px;margin-left:auto;margin-right:auto}
+  .looks{justify-content:center}
+  .fitting{height:460px}.fitting img{height:420px}
+  .sticky{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo"><i></i>MAD COMPANY</div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set="ko" aria-pressed="true">KO</button>
+      <button type="button" data-set="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<!-- 1. HERO : 광고 엔드카드("오늘도 칼퇴?")에서 그대로 이어지는 톤 -->
+<section class="hero">
+  <div class="wrap">
+    <div class="clock" id="clock"><span class="dot"></span><b id="time">17:59:45</b><small data-ko id="lk">퇴근까지</small><small data-en id="le">till clock-out</small></div>
+
+    <h1 class="display">
+      <span data-ko>오늘은<br><em>칼퇴</em>한다.</span>
+      <span data-en>Clock out<br><em>on time.</em></span>
+    </h1>
+    <p class="sub">
+      <span data-ko>라바콘 쓰고, 스테이플러 쏘고, 부장님을 뚫고 퇴근하는 한 손 러너 게임</span>
+      <span data-en>Grab your cone, fire your stapler, and blast past the boss. A one-thumb runner for your commute.</span>
+    </p>
+
+    <div class="stage" aria-hidden="true">
+      <img class="crew c1" src="img/crewR.webp" alt="">
+      <img class="crew c2" src="img/crewU.webp" alt="">
+      <img class="crew c3" src="img/crewY.webp" alt="">
+      <img class="crew c4" src="img/crewG.webp" alt="">
+      <img class="hero-img" src="img/hero.webp" alt="">
+      <div class="stamp" id="stamp"><span data-ko>퇴근!</span><span data-en>OUT!</span></div>
+    </div>
+
+    <div class="card" id="signup">
+      <form id="form" novalidate>
+        <h2><span data-ko>출시되면 제일 먼저 알려드릴게요</span><span data-en>Be first to know when we launch</span></h2>
+        <p class="hint"><span data-ko>출시일에 메일 한 통만 보내요. 스팸 없어요.</span><span data-en>One email on launch day. No spam.</span></p>
+        <div class="field">
+          <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="이메일 주소" aria-label="이메일 주소" required>
+          <button class="btn" type="submit"><span data-ko>알림 받기</span><span data-en>Notify me</span></button>
+        </div>
+        <label class="consent">
+          <input id="agree" type="checkbox" required>
+          <span data-ko>(필수) 출시 알림 발송을 위한 이메일 수집·이용에 동의합니다. 출시 후 3개월 내 파기. <a href="privacy.html" target="_blank" class="pp">자세히</a></span>
+          <span data-en>I agree to receive a launch email. My address is deleted within 3 months of launch. <a href="privacy.html" target="_blank" class="pp">Details</a></span>
+        </label>
+        <div class="err" id="err" role="alert"></div>
+        <!-- 광고 소재별 전환율 측정용: URL의 utm_* 값을 같이 저장 -->
+        <input type="hidden" name="utm_source"><input type="hidden" name="utm_campaign"><input type="hidden" name="utm_content"><input type="hidden" name="lang">
+      </form>
+      <div class="done" aria-live="polite">
+        <div class="big"><span data-ko>신청 완료!</span><span data-en>You're in!</span></div>
+        <p><span data-ko>출시되는 날, 칼퇴 소식 들고 찾아갈게요.</span><span data-en>We'll email you on launch day.</span></p>
+        <button class="btn share" type="button" id="share"><span data-ko>동기한테도 알려주기</span><span data-en>Tell a coworker</span></button>
+      </div>
+    </div>
+    <div class="stores"><span>Google Play · <span data-ko>출시 예정</span><span data-en>Coming soon</span></span><span>App Store · <span data-ko>출시 예정</span><span data-en>Coming soon</span></span></div>
+  </div>
+</section>
+
+<!-- 2. 광고 그대로 게임 -->
+<section class="s">
+  <div class="wrap">
+    <span class="eyebrow"><span data-ko>광고 = 실제 게임</span><span data-en>WHAT YOU SAW IS WHAT YOU PLAY</span></span>
+    <h2 class="display"><span data-ko>광고에서 본 그 화면,<br>진짜 게임 화면이에요</span><span data-en>The ad is<br>the actual game</span></h2>
+    <p class="lead"><span data-ko>아래 장면은 전부 개발 중인 게임을 그대로 녹화한 거예요. 광고와 다른 미니게임은 없어요.</span><span data-en>Every shot below is recorded straight from the game in development. No bait-and-switch minigames.</span></p>
+    <div class="shots">
+      <figure class="shot"><div class="phone"><img src="img/shot_box.webp" alt="상자를 쏴서 동료를 모으는 장면" loading="lazy"></div><figcaption><span data-ko>상자 쏴서 동료 모으기</span><span data-en>Shoot boxes, gather coworkers</span></figcaption></figure>
+      <figure class="shot"><div class="phone"><img src="img/shot_weapon.webp" alt="무기가 전동 스테이플러로 진화하는 장면" loading="lazy"></div><figcaption><span data-ko>스테이플러가 전동으로 진화</span><span data-en>Your stapler evolves</span></figcaption></figure>
+      <figure class="shot"><div class="phone"><img src="img/shot_alley.webp" alt="먹자골목 스테이지를 달리는 200명의 동료" loading="lazy"></div><figcaption><span data-ko>동료 200명까지 불어나요</span><span data-en>Grow your crew to 200+</span></figcaption></figure>
+      <figure class="shot"><div class="phone"><img src="img/shot_boss.webp" alt="부장과의 보스전" loading="lazy"></div><figcaption><span data-ko>마지막 관문을 통과하라!</span><span data-en>Break through the final gate!</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 플레이 방법 -->
+<section class="s how">
+  <div class="wrap">
+    <span class="eyebrow"><span data-ko>엄지 하나면 끝</span><span data-en>ONE THUMB</span></span>
+    <h2 class="display"><span data-ko>지하철 한 정거장,<br>한 판이면 충분해요</span><span data-en>One subway stop.<br>One run.</span></h2>
+    <p class="lead"><span data-ko>한 판 40초. 소리 꺼도, 한 손으로 서서 해도 돼요.</span><span data-en>40-second runs. Plays fine with sound off and one hand on the rail.</span></p>
+    <div class="steps">
+      <div class="step">
+        <div class="art"><img src="img/run.webp" alt=""></div>
+        <div><div class="n">01</div><h3><span data-ko>좌우로 밀기</span><span data-en>Swipe left or right</span></h3><p><span data-ko>두 줄 중 하나를 고르면 끝. 쏘는 건 자동이에요.</span><span data-en>Pick a lane. Shooting is automatic.</span></p></div>
+      </div>
+      <div class="step">
+        <div class="art"><img src="img/box.webp" alt=""><span class="boxlabel">+10 <span data-ko>동기</span><span data-en>Crew</span><small>[15]</small></span></div>
+        <div><div class="n">02</div><h3><span data-ko>상자 부수고 동료 모으기</span><span data-en>Smash boxes, grow your crew</span></h3><p><span data-ko>+10 동기, ×2 칼퇴… 부순 만큼 동료가 늘어나요. −20 야근은 피하세요.</span><span data-en>+10 Crew, ×2 Clock-out… avoid −20 Overtime.</span></p></div>
+      </div>
+      <div class="step">
+        <div class="art"><img src="img/shout.webp" alt=""><span class="bubble"><span data-ko>이걸요??</span><span data-en>THIS??</span></span></div>
+        <div><div class="n">03</div><h3><span data-ko>보스 앞에서 사자후</span><span data-en>Unleash the Shout</span></h3><p><span data-ko>"이걸요??제가요??" 보스마다 다른 사자후 한 방에 밀린 업무가 전부 날아가요.</span><span data-en>"THIS?? ME??" Each boss gets its own roar, and it blows away every last task.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 퇴근길 모드: 회사 → 지하철 → 먹자골목 → 집 -->
+<section class="s">
+  <div class="wrap">
+    <span class="eyebrow"><span data-ko>퇴근길 모드</span><span data-en>THE COMMUTE</span></span>
+    <h2 class="display"><span data-ko>회사에서 이불 속까지,<br>퇴근길 전부가 전장</span><span data-en>From desk to duvet,<br>every step is a fight</span></h2>
+    <p class="lead"><span data-ko>회사에서 지하철, 먹자골목을 지나 드디어 집. 한 스테이지 한 판이에요.</span><span data-en>Office, subway, food street, then finally home. One stage per run.</span></p>
+    <div class="route">
+      <div class="leg">
+        <div class="pin"><b>1</b><time>18:00</time></div>
+        <div class="scene">
+          <div class="bg"><img src="img/stage_office.webp" alt="" loading="lazy"></div>
+          <div class="txt"><div class="where"><span data-ko>STAGE 1 · 회사</span><span data-en>STAGE 1 · Office</span></div><h3><span data-ko>복도 → 엘리베이터</span><span data-en>Hallway → Elevator</span></h3><div class="vs"><span data-ko>파티션 사이 복도를 뚫고 엘리베이터까지</span><span data-en>Blast down the hallway to the elevator</span></div><div class="bossline">BOSS · <span data-ko>5시59분 부장</span><span data-en>The 5:59 Manager</span></div></div>
+        </div>
+      </div>
+      <div class="leg">
+        <div class="pin"><b>2</b><time>18:20</time></div>
+        <div class="scene">
+          <div class="bg"><img src="img/stage_subway.webp" alt="" loading="lazy"></div>
+          <div class="txt"><div class="where"><span data-ko>STAGE 2 · 지하철</span><span data-en>STAGE 2 · Subway</span></div><h3><span data-ko>승강장 → 전동차</span><span data-en>Platform → Train</span></h3><div class="vs"><span data-ko>문 닫히기 전에 전동차에 올라타기</span><span data-en>Make the train before the doors close</span></div><div class="bossline">BOSS · <span data-ko>단소 아저씨</span><span data-en>The Flute Uncle</span></div></div>
+        </div>
+      </div>
+      <div class="leg">
+        <div class="pin"><b>3</b><time>18:50</time></div>
+        <div class="scene">
+          <div class="bg"><img src="img/stage_alley.webp" alt="" loading="lazy"></div>
+          <div class="txt"><div class="where"><span data-ko>STAGE 3 · 먹자골목</span><span data-en>STAGE 3 · Food street</span></div><h3><span data-ko>먹자골목 → 아파트 입구</span><span data-en>Food street → Home</span></h3><div class="vs"><span data-ko>알전구 골목을 지나 우리 집 앞까지</span><span data-en>Through the food street, all the way home</span></div><div class="bossline">BOSS · <span data-ko>치킨집 아저씨</span><span data-en>The Chicken Guy</span></div></div>
+        </div>
+      </div>
+      <div class="leg home">
+        <div class="pin"><b>🏠</b><time>19:30</time></div>
+        <div class="scene">
+          <div class="bg"><img src="img/stage_home_A.webp" alt="이불 덮고 누워 있는 태사자" loading="lazy"></div>
+          <div class="txt"><div class="where"><span data-ko>도착 · 집</span><span data-en>GOAL · Home</span></div><h3><span data-ko>이불 속 칼퇴 완료</span><span data-en>Tucked in. Mission done.</span></h3><div class="vs"><span data-ko>오늘 하루도 무사히.</span><span data-en>You survived another day.</span></div><q><span data-ko>하… 이게 행복이지.</span><span data-en>Ahh… this is the life.</span></q></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 퇴근 빌런 도감 -->
+<section class="s dexsec">
+  <div class="wrap">
+    <span class="eyebrow"><span data-ko>보스 & 빌런 도감</span><span data-en>BOSSES & VILLAINS</span></span>
+    <h2 class="display"><span data-ko>오늘도 누군가<br>내 퇴근을 막는다</span><span data-en>Someone always<br>blocks the exit</span></h2>
+    <p class="lead"><span data-ko>어디서 본 것 같다고요? 맞아요, 당신 회사에도 있어요.</span><span data-en>Look familiar? Yep, they work at your company too.</span></p>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="office" aria-selected="true"><span data-ko>🏢 회사</span><span data-en>🏢 Office</span></button>
+      <button type="button" role="tab" data-tab="subway" aria-selected="false"><span data-ko>🚇 지하철</span><span data-en>🚇 Subway</span></button>
+      <button type="button" role="tab" data-tab="alley" aria-selected="false"><span data-ko>🍗 먹자골목</span><span data-en>🍗 Food street</span></button>
+    </div>
+    <div class="dex">
+      <article class="boss" data-stage="office"><div class="mob"><img src="img/boss_bujang.webp" alt="" loading="lazy"></div><div><span class="tag t-boss">BOSS</span><h3><span data-ko>5시59분 부장</span><span data-en>The 5:59 Manager</span></h3><q><span data-ko>내일 아침까지 할수있지?</span><span data-en>By tomorrow morning, okay?</span></q><p><span data-ko>엘리베이터 앞을 막고 서류 더미를 던져요. 놓친 적은 밀린 업무가 되어 부장 편으로 몰려와요.</span><span data-en>Blocks the elevator and hurls paperwork. Every enemy you missed joins his side.</span></p><p class="tip"><span data-ko>💥 사자후 "이걸요??제가요??"</span><span data-en>💥 Roar: "THIS?? ME??"</span></p></div></article>
+      <article data-stage="office"><div class="mob"><img src="img/mob_hoesik.webp" alt="" loading="lazy"></div><span class="tag t-base"><span data-ko>기본</span><span data-en>Basic</span></span><h3><span data-ko>회식 강요 팀장</span><span data-en>Dinner Pusher</span></h3><q><span data-ko>오늘 다 같이 한잔?</span><span data-en>Team drinks tonight!</span></q><p><span data-ko>동료 한 명을 끌고 빠져나가요. 나가기 전에 잡으면 구출!</span><span data-en>Drags a coworker away. Catch him first to rescue them!</span></p></article>
+      <article data-stage="office"><div class="mob"><img src="img/mob_meeting.webp" alt="" loading="lazy"></div><span class="tag t-fast"><span data-ko>빠름</span><span data-en>Fast</span></span><h3><span data-ko>회의 소집러</span><span data-en>Meeting Caller</span></h3><q><span data-ko>잠깐 5분만~</span><span data-en>Got 5 minutes?</span></q><p><span data-ko>지그재그로 달려와서 조준이 어려워요.</span><span data-en>Zigzags toward you. Hard to hit.</span></p></article>
+      <article data-stage="office"><div class="mob"><img src="img/mob_bug.webp" alt="" loading="lazy"></div><span class="tag t-tank"><span data-ko>단단함</span><span data-en>Tough</span></span><h3><span data-ko>버그</span><span data-en>The Bug</span></h3><q><span data-ko>(배포 5분 전 등장)</span><span data-en>(appears 5 min before release)</span></q><p><span data-ko>잡으면 작은 버그 두 마리로 쪼개져요.</span><span data-en>Splits into two tiny bugs when squashed.</span></p></article>
+      <article data-stage="office"><div class="mob"><img src="img/mob_paper.webp" alt="" loading="lazy"></div><span class="tag t-base"><span data-ko>떼거리</span><span data-en>Swarm</span></span><h3><span data-ko>밀린 업무</span><span data-en>The Backlog</span></h3><q><span data-ko>나 아직 여기 있어…</span><span data-en>Still here…</span></q><p><span data-ko>놓친 적은 밀린 업무가 되어 보스 편으로 몰려와요.</span><span data-en>Enemies you miss pile up and join the boss.</span></p></article>
+      <article class="boss" data-stage="subway" hidden><div class="mob"><img src="img/boss_danso.webp" alt="" loading="lazy"></div><div><span class="tag t-boss">BOSS</span><h3><span data-ko>단소 아저씨</span><span data-en>The Flute Uncle</span></h3><q><span data-ko>어딜 먼저 타려고!</span><span data-en>Don't you dare board first!</span></q><p><span data-ko>전동차 문 앞에서 단소를 불며 음표 탄막을 쏴요.</span><span data-en>Plays by the train doors and fires a barrage of notes.</span></p><p class="tip"><span data-ko>💥 사자후 "후!!아!!유!!"</span><span data-en>💥 Roar: "WHO!! ARE!! YOU!!"</span></p></div></article>
+      <article data-stage="subway" hidden><div class="mob"><img src="img/mob_backpack.webp" alt="" loading="lazy"></div><span class="tag t-base"><span data-ko>기본</span><span data-en>Basic</span></span><h3><span data-ko>백팩 몬스터</span><span data-en>Backpack Blocker</span></h3><q><span data-ko>(백팩 안 벗음)</span><span data-en>(never takes it off)</span></q><p><span data-ko>두 줄에 넓게 서 있어서 피할 수 없어요. 뚫어야 해요.</span><span data-en>Spans both lanes. No dodging, only blasting.</span></p></article>
+      <article data-stage="subway" hidden><div class="mob"><img src="img/mob_umbrella.webp" alt="" loading="lazy"></div><span class="tag t-fast"><span data-ko>빠름</span><span data-en>Fast</span></span><h3><span data-ko>장우산 몬스터</span><span data-en>Umbrella Swinger</span></h3><q><span data-ko>(우산 골프 스윙)</span><span data-en>(practicing golf swings)</span></q><p><span data-ko>휘두르면 옆 줄까지 닿아요.</span><span data-en>Swings reach into the next lane.</span></p></article>
+      <article data-stage="subway" hidden><div class="mob"><img src="img/mob_phone.webp" alt="" loading="lazy"></div><span class="tag t-tank"><span data-ko>단단함</span><span data-en>Tough</span></span><h3><span data-ko>핸드폰 길막러</span><span data-en>Phone Zombie</span></h3><q><span data-ko>(고개 숙이고 정지)</span><span data-en>(head down, not moving)</span></q><p><span data-ko>여러 명이 탑처럼 쌓여 길을 막아요.</span><span data-en>Stack up into a wall that blocks the lane.</span></p></article>
+      <article class="boss" data-stage="alley" hidden><div class="mob"><img src="img/boss_chicken.webp" alt="" loading="lazy"></div><div><span class="tag t-boss">BOSS</span><h3><span data-ko>치킨집 아저씨</span><span data-en>The Chicken Guy</span></h3><q><span data-ko>치맥 이걸 참는다고??</span><span data-en>You're skipping chicken &amp; beer??</span></q><p><span data-ko>집 앞에서 치킨으로 유혹하며 닭다리를 던져요.</span><span data-en>Tempts you at your door and lobs drumsticks.</span></p><p class="tip"><span data-ko>💥 사자후 "내일 시켜먹을게요!!"</span><span data-en>💥 Roar: "I'll order it tomorrow!!"</span></p></div></article>
+      <article data-stage="alley" hidden><div class="mob"><img src="img/mob_tout.webp" alt="" loading="lazy"></div><span class="tag t-base"><span data-ko>기본</span><span data-en>Basic</span></span><h3><span data-ko>호객꾼</span><span data-en>Flyer Tout</span></h3><q><span data-ko>사장님~ 한 번 보고 가요~</span><span data-en>Hey boss, take a look~</span></q><p><span data-ko>멀리서 전단지를 던져요. 빨간 표시가 뜨면 줄을 바꿔요.</span><span data-en>Throws flyers from afar. Switch lanes when you see red.</span></p></article>
+      <article data-stage="alley" hidden><div class="mob"><img src="img/mob_group.webp" alt="" loading="lazy"></div><span class="tag t-fast"><span data-ko>길막</span><span data-en>Blocker</span></span><h3><span data-ko>2차 술자리 무리</span><span data-en>Second-Round Crew</span></h3><q><span data-ko>2차 가자~!</span><span data-en>Round two, let's go!</span></q><p><span data-ko>어깨동무하고 한 줄을 통째로 막아요.</span><span data-en>Arm in arm, they block a whole lane.</span></p></article>
+      <article data-stage="alley" hidden><div class="mob"><img src="img/mob_truck.webp" alt="" loading="lazy"></div><span class="tag t-tank"><span data-ko>단단함</span><span data-en>Tough</span></span><h3><span data-ko>떡볶이 트럭</span><span data-en>Tteokbokki Truck</span></h3><q><span data-ko>(냄새로 공격)</span><span data-en>(attacks with smell)</span></q><p><span data-ko>한 대만 크게 나와서 한 줄을 차지해요.</span><span data-en>One huge truck takes up a full lane.</span></p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 무기 5종 × 강화 3단계 -->
+<section class="s how">
+  <div class="wrap">
+    <span class="eyebrow"><span data-ko>사무용품 무기</span><span data-en>OFFICE ARSENAL</span></span>
+    <h2 class="display"><span data-ko>탕비실이 곧<br>무기고다</span><span data-en>The break room<br>is an armory</span></h2>
+    <p class="lead"><span data-ko>무기 상자를 부수면 교체, 한 번 더 부수면 진급! 신입 → 대리 → 임원으로 커져요.</span><span data-en>Smash a weapon box to switch. Smash it again to get promoted: Rookie → Manager → Executive.</span></p>
+    <div class="weapons">
+      <div class="wpn">
+        <header><h3><span data-ko>스테이플러</span><span data-en>Stapler</span></h3><span class="role"><span data-ko>기본 연사</span><span data-en>Rapid fire</span></span></header>
+        <p><span data-ko>빠르게 딱딱딱. 두루 무난해요.</span><span data-en>Fast single shots. Good at everything.</span></p>
+        <div class="tiers">
+          <div class="tier"><div class="img"><img src="img/w_staple1.webp" alt="" loading="lazy"></div><span data-ko>신입 · 미니</span><span data-en>Rookie · Mini</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_staple2.webp" alt="" loading="lazy"></div><span data-ko>대리 · 대용량</span><span data-en>Manager · Heavy-duty</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_staple3.webp" alt="" loading="lazy"></div><span data-ko>임원 · 전동</span><span data-en>Exec · Electric</span></div>
+        </div>
+      </div>
+      <div class="wpn">
+        <header><h3><span data-ko>탕비실 믹스커피</span><span data-en>Instant Coffee</span></h3><span class="role"><span data-ko>산탄</span><span data-en>Spread</span></span></header>
+        <p><span data-ko>한 줌씩 부채꼴로 촤악. 떼몹에 강해요.</span><span data-en>Sprays sticks in a fan. Great vs crowds.</span></p>
+        <div class="tiers">
+          <div class="tier"><div class="img"><img src="img/w_mix1.webp" alt="" loading="lazy"></div><span data-ko>신입 · 3개</span><span data-en>Rookie · 3 sticks</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_mix2.webp" alt="" loading="lazy"></div><span data-ko>대리 · 한 줌</span><span data-en>Manager · A fistful</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_mix3.webp" alt="" loading="lazy"></div><span data-ko>임원 · 박스째</span><span data-en>Exec · Whole box</span></div>
+        </div>
+      </div>
+      <div class="wpn">
+        <header><h3><span data-ko>상한 착즙주스</span><span data-en>Spoiled Juice</span></h3><span class="role"><span data-ko>범위 폭발</span><span data-en>Splash</span></span></header>
+        <p><span data-ko>빵빵하게 부푼 병을 던지면 퍽! 끈적한 웅덩이까지.</span><span data-en>Swollen bottles go boom and leave a sticky puddle.</span></p>
+        <div class="tiers">
+          <div class="tier"><div class="img"><img src="img/w_juice1.webp" alt="" loading="lazy"></div><span data-ko>신입 · 한 병</span><span data-en>Rookie · Bottle</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_juice2.webp" alt="" loading="lazy"></div><span data-ko>대리 · 페트병</span><span data-en>Manager · Jumbo</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_juice3.webp" alt="" loading="lazy"></div><span data-ko>임원 · 한 박스</span><span data-en>Exec · Crate</span></div>
+        </div>
+      </div>
+      <div class="wpn">
+        <header><h3><span data-ko>방향제 스프레이</span><span data-en>Air Freshener</span></h3><span class="role"><span data-ko>근거리</span><span data-en>Close range</span></span></header>
+        <p><span data-ko>분홍 향기 칙~ 맞으면 어질어질 느려져요.</span><span data-en>A pink cloud that makes enemies woozy.</span></p>
+        <div class="tiers">
+          <div class="tier"><div class="img"><img src="img/w_spray1.webp" alt="" loading="lazy"></div><span data-ko>신입 · 미니</span><span data-en>Rookie · Mini</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_spray2.webp" alt="" loading="lazy"></div><span data-ko>대리 · 대용량</span><span data-en>Manager · Large</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_spray3.webp" alt="" loading="lazy"></div><span data-ko>임원 · 자동 분사</span><span data-en>Exec · Auto</span></div>
+        </div>
+      </div>
+      <div class="wpn">
+        <header><h3><span data-ko>명함 수리검</span><span data-en>Business Card</span></h3><span class="role"><span data-ko>관통</span><span data-en>Pierce</span></span></header>
+        <p><span data-ko>휙! 줄 선 적을 줄줄이 뚫어요.</span><span data-en>Slices through a whole line of enemies.</span></p>
+        <div class="tiers">
+          <div class="tier"><div class="img"><img src="img/w_card1.webp" alt="" loading="lazy"></div><span data-ko>신입 · 내 명함</span><span data-en>Rookie · Mine</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_card2.webp" alt="" loading="lazy"></div><span data-ko>대리 · 금박</span><span data-en>Manager · Gold</span></div><div class="arrow">›</div>
+          <div class="tier"><div class="img"><img src="img/w_card3.webp" alt="" loading="lazy"></div><span data-ko>임원 · 대표이사</span><span data-en>Exec · CEO's</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 꾸미기 -->
+<section class="s">
+  <div class="wrap">
+    <span class="eyebrow"><span data-ko>꾸미기</span><span data-en>DRESS UP</span></span>
+    <h2 class="display"><span data-ko>오늘은 뭐 입고<br>퇴근하지?</span><span data-en>What are you<br>clocking out in?</span></h2>
+    <p class="lead"><span data-ko>오늘 기분에 맞춰 퇴근룩을 골라요. 눌러서 입혀보세요.</span><span data-en>Pick your clock-out look. Tap to try one on.</span></p>
+    <div class="dress">
+      <div class="fitting"><span class="name" id="lookName">기본 정장</span><div class="floor"></div><img id="lookImg" src="img/look1.webp" alt="태사자 꾸미기 미리보기"></div>
+      <div class="looks" id="looks" role="group" aria-label="의상"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 마지막 CTA -->
+<section class="final">
+  <div class="wrap">
+    <img class="lineup" src="img/lineup.webp" alt="태사자와 동료들" loading="lazy">
+    <h2 class="display"><span data-ko>오늘도 칼퇴?</span><span data-en>Clocking out on time?</span></h2>
+    <a class="btn" href="#signup" style="display:inline-flex;align-items:center" data-focus><span data-ko>출시 알림 받기</span><span data-en>Get launch alert</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 <a href="https://taeyongvv.github.io/ricecookey.io/#games" target="_blank" rel="noopener">RICECOOKEY</a> · <a href="privacy.html" class="pp"><span data-ko>개인정보 처리방침</span><span data-en>Privacy Policy</span></a></span>
+    <span data-ko>수집 항목: 이메일 · 목적: 출시 알림 · 보관: 출시 후 3개월 · 문의: <a href="mailto:ricecookey.help@gmail.com">ricecookey.help@gmail.com</a></span>
+    <span data-en>We collect: email · Purpose: launch alert · Kept: 3 months after launch · Contact: <a href="mailto:ricecookey.help@gmail.com">ricecookey.help@gmail.com</a></span>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky"><a class="btn" href="#signup" data-focus style="display:flex;align-items:center;justify-content:center"><span data-ko>출시 알림 받기</span><span data-en>Get launch alert</span></a></div>
+
+<script>
+// 언어: ?lang=en 또는 브라우저 언어. 필리핀 광고는 링크에 ?lang=en을 붙인다.
+const q=new URLSearchParams(location.search);
+function setLang(l){
+  document.documentElement.lang=l;
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.set===l));
+  const e=document.getElementById('email');
+  e.placeholder=l==='en'?'Email address':'이메일 주소'; e.setAttribute('aria-label',e.placeholder);
+  document.title=l==='en'?'MAD COMPANY — Clock out on time':'매드컴퍼니 — 오늘은 칼퇴한다';
+  document.querySelectorAll('a.pp').forEach(a=>a.href='privacy.html?lang='+l);
+}
+setLang(q.get('lang')||(navigator.language.startsWith('ko')?'ko':'en'));
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.set));
+
+// 17:59:45 → 18:00:00 카운트다운 후 "퇴근!" 도장 (광고 첫 장면의 시계와 연결)
+let s=45;const t=document.getElementById('time');
+const tick=setInterval(()=>{
+  s++;
+  if(s>=60){clearInterval(tick);t.textContent='18:00:00';document.getElementById('clock').classList.add('off');lk.textContent='퇴근 시간';le.textContent='clock-out';document.getElementById('stamp').classList.add('on');return}
+  t.textContent='17:59:'+String(s).padStart(2,'0');
+},1000);
+
+// 구글 폼 연결 (질문 순서: email, agree, lang, utm_source, utm_campaign, utm_content)
+const GF={url:'https://docs.google.com/forms/d/e/1FAIpQLSc5IpWtZr-y3KEyzxNfuQdLHTlJPCgzwMFXUHFzrGGmKt3LMQ/formResponse',
+  email:'entry.530128931',agree:'entry.597227902',lang:'entry.1634671956',
+  utm_source:'entry.1437171912',utm_campaign:'entry.778231829',utm_content:'entry.1884236441'};
+
+// UTM 저장
+const f=document.getElementById('form');
+['utm_source','utm_campaign','utm_content'].forEach(k=>f.elements[k].value=q.get(k)||'');
+
+f.addEventListener('submit',e=>{
+  e.preventDefault();
+  const em=document.getElementById('email'),ag=document.getElementById('agree'),err=document.getElementById('err'),en=document.documentElement.lang==='en';
+  const ok=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim());
+  em.setAttribute('aria-invalid',!ok);
+  if(!ok){err.textContent=en?'Please check your email address.':'이메일 주소를 다시 확인해 주세요.';em.focus();return}
+  if(!ag.checked){err.textContent=en?'Please tick the consent box.':'동의에 체크해 주세요.';return}
+  err.textContent='';f.elements.lang.value=document.documentElement.lang;
+  // 구글 폼으로 전송 → 응답은 폼에 연결된 구글 시트에 쌓인다 (방문자에게 폼 화면은 안 보임)
+  const btn=f.querySelector('button[type=submit]');btn.disabled=true;
+  const body=new URLSearchParams({
+    [GF.email]:em.value.trim(),[GF.agree]:'Y',[GF.lang]:f.elements.lang.value,
+    [GF.utm_source]:f.elements.utm_source.value,[GF.utm_campaign]:f.elements.utm_campaign.value,[GF.utm_content]:f.elements.utm_content.value
+  });
+  // no-cors: 구글 폼은 응답 내용을 돌려주지 않으므로 네트워크 오류만 실패로 본다
+  fetch(GF.url,{method:'POST',mode:'no-cors',body})
+    .then(()=>document.getElementById('signup').classList.add('ok'))
+    .catch(()=>{err.textContent=en?'Network error. Please try again.':'전송에 실패했어요. 잠시 후 다시 시도해 주세요.';btn.disabled=false});
+});
+
+document.getElementById('share').onclick=()=>{
+  const d={title:'매드컴퍼니',text:document.documentElement.lang==='en'?'A game about clocking out on time':'칼퇴하는 게임 나온대',url:location.href.split('?')[0]};
+  navigator.share?navigator.share(d).catch(()=>{}):navigator.clipboard?.writeText(d.url);
+};
+
+// 빌런 도감 탭
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('.dex article').forEach(a=>a.hidden=a.dataset.stage!==b.dataset.tab);
+});
+
+// 꾸미기: 의상 버튼을 누르면 큰 미리보기가 바뀐다
+const LOOKS=[['기본 정장','Suit & Cone'],['황금 임원','Golden Exec'],['불금 후드','Casual Friday'],['재택근무','Work From Home'],['워크숍','Team Workshop'],['할로윈','Halloween'],['회식','Team Dinner']];
+let cur=0;const lookImg=document.getElementById('lookImg'),lookName=document.getElementById('lookName'),looks=document.getElementById('looks');
+function showLook(i){
+  cur=i;lookName.textContent=LOOKS[i][document.documentElement.lang==='en'?1:0];
+  looks.querySelectorAll('button').forEach((b,k)=>b.setAttribute('aria-pressed',k===i));
+  lookImg.classList.add('swap');setTimeout(()=>{lookImg.src=`img/look${i+1}.webp`;lookImg.classList.remove('swap')},120);
+}
+LOOKS.forEach((l,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',l[0]);b.innerHTML=`<img src="img/look${i+1}.webp" alt="" loading="lazy">`;b.onclick=()=>showLook(i);looks.appendChild(b)});
+looks.firstChild.setAttribute('aria-pressed','true');
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>lookName.textContent=LOOKS[cur][b.dataset.set==='en'?1:0]));
+if(document.documentElement.lang==='en')lookName.textContent=LOOKS[0][1];
+
+// 하단 고정 버튼: 첫 신청 카드가 화면 밖으로 나가면 등장
+const sticky=document.getElementById('sticky'),card=document.getElementById('signup');
+new IntersectionObserver(([en])=>sticky.classList.toggle('show',!en.isIntersecting&&!card.classList.contains('ok'))).observe(card);
+document.querySelectorAll('[data-focus]').forEach(a=>a.addEventListener('click',()=>setTimeout(()=>document.getElementById('email')?.focus({preventScroll:true}),450)));
+</script>
+</body>
+</html>
