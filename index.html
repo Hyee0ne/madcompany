@@ -274,6 +274,18 @@ footer a{color:inherit}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<!-- 방문 통계 (GA4). 측정 ID가 비어 있으면 아무것도 불러오지 않는다 -->
+<script>
+const GA_ID='G-6K87LCSNDT';
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+if(GA_ID){const s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;document.head.appendChild(s);gtag('js',new Date());gtag('config',GA_ID);}
+// 이벤트마다 어떤 광고 소재에서 왔는지(utm_content)와 언어를 붙인다. once=true면 한 번 방문에 한 번만 기록
+const sent={};
+function track(name,params,once){
+  if(!GA_ID||(once&&sent[name]))return;sent[name]=1;
+  gtag('event',name,Object.assign({creative:new URLSearchParams(location.search).get('utm_content')||'(none)',lang:document.documentElement.lang},params||{}));
+}
+</script>
 </head>
 <body>
 
@@ -575,13 +587,17 @@ const GF={url:'https://docs.google.com/forms/d/e/1FAIpQLSc5IpWtZr-y3KEyzxNfuQdLH
 const f=document.getElementById('form');
 ['utm_source','utm_campaign','utm_content'].forEach(k=>f.elements[k].value=q.get(k)||'');
 
+// 방문 흐름 기록: 신청 칸이 화면에 보임 → 이메일 칸 누름 → 신청 결과
+new IntersectionObserver((es,o)=>{if(es.some(e=>e.isIntersecting)){track('form_view',null,true);o.disconnect()}},{threshold:.5}).observe(document.getElementById('signup'));
+document.getElementById('email').addEventListener('focus',()=>track('email_focus',null,true));
+
 f.addEventListener('submit',e=>{
   e.preventDefault();
   const em=document.getElementById('email'),ag=document.getElementById('agree'),err=document.getElementById('err'),en=document.documentElement.lang==='en';
   const ok=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim());
   em.setAttribute('aria-invalid',!ok);
-  if(!ok){err.textContent=en?'Please check your email address.':'이메일 주소를 다시 확인해 주세요.';em.focus();return}
-  if(!ag.checked){err.textContent=en?'Please tick the consent box.':'동의에 체크해 주세요.';return}
+  if(!ok){err.textContent=en?'Please check your email address.':'이메일 주소를 다시 확인해 주세요.';em.focus();track('submit_invalid');return}
+  if(!ag.checked){err.textContent=en?'Please tick the consent box.':'동의에 체크해 주세요.';track('submit_noconsent');return}
   err.textContent='';f.elements.lang.value=document.documentElement.lang;
   // 구글 폼으로 전송 → 응답은 폼에 연결된 구글 시트에 쌓인다 (방문자에게 폼 화면은 안 보임)
   const btn=f.querySelector('button[type=submit]');btn.disabled=true;
@@ -591,11 +607,12 @@ f.addEventListener('submit',e=>{
   });
   // no-cors: 구글 폼은 응답 내용을 돌려주지 않으므로 네트워크 오류만 실패로 본다
   fetch(GF.url,{method:'POST',mode:'no-cors',body})
-    .then(()=>document.getElementById('signup').classList.add('ok'))
-    .catch(()=>{err.textContent=en?'Network error. Please try again.':'전송에 실패했어요. 잠시 후 다시 시도해 주세요.';btn.disabled=false});
+    .then(()=>{document.getElementById('signup').classList.add('ok');track('generate_lead',null,true)})
+    .catch(()=>{err.textContent=en?'Network error. Please try again.':'전송에 실패했어요. 잠시 후 다시 시도해 주세요.';btn.disabled=false;track('submit_fail')});
 });
 
 document.getElementById('share').onclick=()=>{
+  track('share');
   const d={title:'매드컴퍼니',text:document.documentElement.lang==='en'?'A game about clocking out on time':'칼퇴하는 게임 나온대',url:location.href.split('?')[0]};
   navigator.share?navigator.share(d).catch(()=>{}):navigator.clipboard?.writeText(d.url);
 };
@@ -603,7 +620,7 @@ document.getElementById('share').onclick=()=>{
 // 플레이 영상: 스테이지 탭으로 영상 교체, 큰 재생 버튼
 const vid=document.getElementById('vid'),vplay=document.getElementById('vplay');
 vplay.onclick=()=>{vplay.hidden=true;vid.play()};
-vid.addEventListener('play',()=>vplay.hidden=true);
+vid.addEventListener('play',()=>{vplay.hidden=true;track('video_play',{stage:document.querySelector('.vtabs [aria-selected=true]')?.dataset.v})});
 document.querySelectorAll('.vtabs button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.vtabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
   const k=b.dataset.v,playing=!vid.paused;
